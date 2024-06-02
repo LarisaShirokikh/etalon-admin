@@ -6,7 +6,7 @@ const CatalogSchema = new Schema({
   description: String,
   price: { type: Number },
   images: [{ type: String }],
-  parents: [{ type: mongoose.Types.ObjectId, ref: "Category" }],
+  parents: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   properties: [{ type: Object }],
   slug: { type: String, unique: true },
 });

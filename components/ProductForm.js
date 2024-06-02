@@ -86,6 +86,7 @@ export default function ProductForm({
       images: finalImages,
       parents,
       category: selectedCategories,
+      catalog, // добавьте это поле
       design,
       contours,
       insulation,
@@ -189,10 +190,7 @@ export default function ProductForm({
       </select>
 
       <label>Категории</label>
-      <select 
-      multiple 
-      onChange={handleCategoryChange} 
-      value={parents}>
+      <select multiple onChange={handleCategoryChange} value={parents}>
         {categories.map((category) => (
           <option key={category._id} value={category._id}>
             {category.name}
