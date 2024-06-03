@@ -302,7 +302,7 @@ export default function ProductForm({
         value={contours}
         onChange={(ev) => setContours(ev.target.value)}
       />
-      <label>Изоляция</label>
+      <label>Утепление</label>
       <input
         type="text"
         value={insulation}
