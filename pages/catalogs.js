@@ -11,6 +11,7 @@ import {
   handleRemoveImage,
   updateImagesOrder,
   fetchCatalogs,
+  fetchBrands,
 } from "@/utils/function";
 
 function Catalogs({ swal }) {
@@ -26,12 +27,14 @@ function Catalogs({ swal }) {
   const [properties, setProperties] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
-
+  const [brands, setBrands] = useState([]); // Состояние для брендов
+  const [selectedBrand, setSelectedBrand] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchCatalogs(setCatalogs);
       await fetchCategories(setCategories);
+      await fetchBrands(setBrands);
     };
 
     fetchData();
@@ -50,6 +53,7 @@ function Catalogs({ swal }) {
       images: finalImages,
       description,
       price: parseFloat(price),
+      brand: selectedBrand,
       parents,
       properties: properties.map((p) => ({
         name: p.name.trim(),
@@ -59,6 +63,7 @@ function Catalogs({ swal }) {
           .map((value) => value.trim()),
       })),
     };
+    console.log("data", data);
     if (editedCatalog) {
       data._id = editedCatalog._id;
       await axios.put("/api/catalogs", data);
@@ -70,13 +75,12 @@ function Catalogs({ swal }) {
     setDescription("");
     setImages([]);
     setPrice("");
+    setSelectedBrand("");
     setImagePreviewUrl("");
     setParentCategories([]);
     setProperties([]);
     fetchCatalogs(setCatalogs);
   }
-
-  
 
   function editCatalog(catalog) {
     setEditedCatalog(catalog);
@@ -143,8 +147,6 @@ function Catalogs({ swal }) {
     });
   }
 
-
-
   useEffect(() => {
     if (imageUrl.trim() !== "") {
       setTimeout(() => {
@@ -154,7 +156,6 @@ function Catalogs({ swal }) {
       }, 500); // Add a delay to avoid flickering
     }
   }, [imageUrl]);
-
 
   const handleCategoryChange = (ev) => {
     const selectedOptions = Array.from(
@@ -279,14 +280,26 @@ function Catalogs({ swal }) {
         )}
         <div className="mb-2 flex flex-wrap gap-1">
           <label>Категории</label>
-          <select 
-          multiple 
-          onChange={handleCategoryChange} 
-          value={parents}>
+          <select multiple onChange={handleCategoryChange} value={parents}>
             {categories.length > 0 &&
               categories.map((category) => (
                 <option key={category._id} value={category._id}>
                   {category.name}
+                </option>
+              ))}
+          </select>
+        </div>
+        <label>Бренд</label>
+        <div className="mb-2 flex flex-wrap gap-1">
+          <select
+            onChange={(ev) => setSelectedBrand(ev.target.value)}
+            value={selectedBrand}
+          >
+            <option value="">Выберите бренд</option>
+            {brands.length > 0 &&
+              brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.name}
                 </option>
               ))}
           </select>
@@ -358,9 +371,9 @@ function Catalogs({ swal }) {
           <thead>
             <tr>
               <td>Категория</td>
-              <td>Родительский каталог</td>
+              <td>Бренд</td>
+              <td>Каталоги</td>
               <td>Фото</td>
-              <td></td>
             </tr>
           </thead>
           <tbody>
@@ -368,10 +381,11 @@ function Catalogs({ swal }) {
               catalogs.map((catalog) => (
                 <tr key={catalog._id}>
                   <td>{catalog.name}</td>
+                  <td>{catalog.brand ? catalog.brand.name : "No brand"}</td>
                   <td>
                     {catalog.parents && catalog.parents.length > 0
                       ? catalog.parents.map((parent) => parent.name).join(", ")
-                      : "Нет родительских категорий"}
+                      : "Нет  категорий"}
                   </td>
                   <td style={{ display: "flex" }}>
                     {catalog.images.map((image, index) => (

@@ -1,7 +1,7 @@
+import { mongooseConnect } from "@/lib/mongoose";
 import multiparty from "multiparty";
 import fs from "fs";
 import path from "path";
-import { mongooseConnect } from "@/lib/mongoose";
 import { isAdminRequest } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handle(req, res) {

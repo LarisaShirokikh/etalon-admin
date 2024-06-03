@@ -59,3 +59,13 @@ export async function handleRemoveImage(indexToRemove, setImages) {
 export function updateImagesOrder(images, setImages) {
   setImages(images);
 }
+
+// Функция для получения списка брендов
+export async function fetchBrands(setBrands) {
+  try {
+    const response = await axios.get("/api/brands");
+    setBrands(response.data);
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+  }
+}

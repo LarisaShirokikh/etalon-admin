@@ -6,6 +6,7 @@ const CatalogSchema = new Schema({
   description: String,
   price: { type: Number },
   images: [{ type: String }],
+  brand: { type: Schema.Types.ObjectId, ref: "Brand" },
   parents: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   properties: [{ type: Object }],
   slug: { type: String, unique: true },
