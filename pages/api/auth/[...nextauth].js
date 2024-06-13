@@ -4,7 +4,10 @@ import YandexProvider from "next-auth/providers/yandex";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 
-const adminEmails = [ "magkaaanastasia15@gmail.com"];
+const adminEmails = [
+  // "magkaaanastasia15@gmail.com",
+  "prazdnikdvora@gmail.com",
+];
 //const adminEmails = ["Lorashirokikh@yandex.ru"];
 
 export const authOptions = {

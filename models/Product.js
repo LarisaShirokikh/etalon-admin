@@ -28,7 +28,7 @@ const ProductSchema = new Schema(
     description: String,
     price: { type: PriceSchema, required: true },
     images: [{ type: String }],
-    parents: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+    // parents: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     catalog: [{ type: Schema.Types.ObjectId, ref: "Catalog" }],
     design: { type: String },
@@ -50,7 +50,6 @@ const ProductSchema = new Schema(
   }
 );
 
-// Middleware для генерации slug перед сохранением продукта
 ProductSchema.pre("save", function (next) {
   if (this.isNew || this.isModified("title")) {
     this.slug = slugify(this.title, { lower: true, strict: true });

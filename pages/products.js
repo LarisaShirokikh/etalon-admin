@@ -19,6 +19,7 @@ export default function Products() {
         <thead>
           <tr>
             <td>Название</td>
+            <td>Каталог</td>
             <td>Цена</td>
             <td>Фото</td>
           </tr>
@@ -29,6 +30,9 @@ export default function Products() {
               <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                 {product.title}
               </td>
+              {/* <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                {product.catalog ? product.catalog.title : "No catalog"}
+              </td> */}
               <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                 {product.price.price}
               </td>

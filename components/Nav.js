@@ -51,17 +51,24 @@ export default function Nav({ show }) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="none"
+            width="24"
+            height="24"
             viewBox="0 0 24 24"
-            strokeWidth={1.5}
+            fill="none"
             stroke="currentColor"
-            className={pathname.includes("/brands") ? activeIcon : inactiveIcon}
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-slack"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-            />
+            <rect width="3" height="8" x="13" y="2" rx="1.5" />
+            <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
+            <rect width="3" height="8" x="8" y="14" rx="1.5" />
+            <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
+            <rect width="8" height="3" x="14" y="13" rx="1.5" />
+            <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
+            <rect width="8" height="3" x="2" y="8" rx="1.5" />
+            <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
           </svg>
           Бренды
         </Link>
@@ -87,6 +94,29 @@ export default function Nav({ show }) {
           </svg>
           Продукты
         </Link>
+
+        <Link
+          href={"/videos"}
+          className={pathname.includes("/videos") ? activeLink : inactiveLink}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-video"
+          >
+            <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+            <rect x="2" y="6" width="14" height="12" rx="2" />
+          </svg>
+          Видео
+        </Link>
+
         <Link
           href={"/categories"}
           className={

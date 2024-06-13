@@ -185,7 +185,7 @@ function Catalogs({ swal }) {
         <label>Описание</label>
         <div className="mb-2 flex flex-wrap gap-1">
           <textarea
-            placeholder="Description"
+            placeholder="Описание"
             onChange={(ev) => setDescription(ev.target.value)}
             value={description}
           />

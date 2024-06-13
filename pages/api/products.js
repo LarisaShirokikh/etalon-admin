@@ -10,9 +10,11 @@ export default async function handle(req, res) {
 
   if (method === "GET") {
     if (req.query?.id) {
-      res.json(await Product.findOne({ _id: req.query.id }));
+      res.json(
+        await Product.findOne({ _id: req.query.id }).populate("catalog")
+      );
     } else {
-      res.json(await Product.find().sort({ _id: -1 }));
+      res.json(await Product.find().sort({ _id: -1 }).populate("catalog"));
     }
   }
 

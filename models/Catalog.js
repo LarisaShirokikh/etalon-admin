@@ -13,7 +13,6 @@ const CatalogSchema = new Schema({
 });
 
 CatalogSchema.pre("save", function (next) {
-  // Генерация slug из названия каталога перед сохранением
   this.slug = slugify(this.name, { lower: true });
   next();
 });

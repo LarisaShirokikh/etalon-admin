@@ -14,9 +14,12 @@ export default async function handle(req, res) {
   }
 
   if (method === "POST") {
-    const { name, images, parentCategory, properties } = req.body;
+    const { name, url, description, images, parentCategory, properties } =
+      req.body;
     const categoryDoc = await Category.create({
       name,
+      url,
+      description,
       images,
       parent: parentCategory || undefined,
       properties,
@@ -26,12 +29,15 @@ export default async function handle(req, res) {
   }
 
   if (method === "PUT") {
-    const { name, images, parentCategory, properties, _id } = req.body;
+    const { name, url, description, images, parentCategory, properties, _id } =
+      req.body;
     const categoryDoc = await Category.updateOne(
       { _id },
       {
         name,
         images,
+        url,
+        description,
         parent: parentCategory || undefined,
         properties,
         slug: slugify(name, { lower: true }),

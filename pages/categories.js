@@ -15,11 +15,11 @@ function Categories({ swal }) {
   const [editedCategory, setEditedCategory] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [url, setUrl] = useState("");
   const [images, setImages] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
-  //const [properties, setProperties] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
@@ -43,11 +43,9 @@ function Categories({ swal }) {
     const data = {
       name,
       images: finalImages,
+      url,
+      description,
       parentCategory,
-      // properties: properties.map((p) => ({
-      //   name: p.name,
-      //   values: p.values.split(","),
-      // })),
     };
     if (editedCategory) {
       data._id = editedCategory._id;
@@ -58,55 +56,22 @@ function Categories({ swal }) {
     }
     setName("");
     setDescription("");
+    setUrl("");
     setImages([]);
     setImagePreviewUrl("");
     setParentCategory("");
-    // setProperties([]);
     fetchCategories();
   }
 
-  // async function uploadImages(ev) {
-  //   const files = ev.target?.files;
-  //   if (files?.length > 0) {
-  //     setIsUploading(true);
-  //     const data = new FormData();
-  //     for (const file of files) {
-  //       data.append("file", file);
-  //     }
-  //     try {
-  //       const res = await axios.post("/api/upload", data);
-  //       setImages((oldImages) => [...oldImages, ...res.data.links]);
-  //     } catch (error) {
-  //       console.error("Error uploading files:", error);
-  //     } finally {
-  //       setIsUploading(false);
-  //     }
-  //   }
-  // }
-
-  // function addImageUrl() {
-  //   if (imageUrl.trim() !== "") {
-  //     setImages((oldImages) => [...oldImages, imageUrl]);
-  //     setImageUrl("");
-  //   }
-  // }
-
-  // function updateImagesOrder(images) {
-  //   setImages(images);
-  // }
+  
 
   function editCategory(category) {
     setEditedCategory(category);
     setName(category.name);
     setDescription(category.description || "");
+    setUrl(category.url || "");
     setImages(category.images || []);
     setParentCategory(category.parent?._id);
-    // setProperties(
-    //   category.properties.map(({ name, values }) => ({
-    //     name,
-    //     values: values.join(","),
-    //   }))
-    // );
   }
 
   function deleteCategory(category) {
@@ -129,59 +94,36 @@ function Categories({ swal }) {
       });
   }
 
-  function addProperty() {
-    setProperties((prev) => {
-      return [...prev, { name: "", values: "" }];
-    });
-  }
-
-  // function handlePropertyNameChange(index, property, newName) {
+  // function addProperty() {
   //   setProperties((prev) => {
-  //     const properties = [...prev];
-  //     properties[index].name = newName;
-  //     return properties;
-  //   });
-  // }
-  // function handlePropertyValuesChange(index, property, newValues) {
-  //   setProperties((prev) => {
-  //     const properties = [...prev];
-  //     properties[index].values = newValues;
-  //     return properties;
+  //     return [...prev, { name: "", values: "" }];
   //   });
   // }
 
-  function removeProperty(indexToRemove) {
-    setProperties((prev) => {
-      return [...prev].filter((p, pIndex) => {
-        return pIndex !== indexToRemove;
-      });
-    });
-  }
+  
 
-  // function handleImageUrlChange(ev) {
-  //   const url = ev.target.value;
-  //   setImageUrl(url);
-  //   setImagePreviewUrl(url);
+  // function removeProperty(indexToRemove) {
+  //   setProperties((prev) => {
+  //     return [...prev].filter((p, pIndex) => {
+  //       return pIndex !== indexToRemove;
+  //     });
+  //   });
   // }
+
+  
 
   useEffect(() => {
     if (imageUrl.trim() !== "") {
       setTimeout(() => {
         setImages((oldImages) => [...oldImages, imageUrl]);
         setImageUrl("");
+        setDescription("");
         setImagePreviewUrl("");
-      }, 500); // Add a delay to avoid flickering
+      }, 500); 
     }
   }, [imageUrl]);
 
-  // function handleRemoveImage(indexToRemove) {
-  //   setImages((prevImages) => {
-  //     const updatedImages = prevImages.filter(
-  //       (_, index) => index !== indexToRemove
-  //     );
-  //     return updatedImages;
-  //   });
-  // }
+  
 
   return (
     <Layout>
@@ -200,6 +142,16 @@ function Categories({ swal }) {
             value={name}
           />
         </div>
+
+        <div className="mb-2 flex flex-wrap gap-1">
+          <input
+            type="text"
+            placeholder="Ссылка на страницу сайта"
+            onChange={(ev) => setUrl(ev.target.value)}
+            value={url}
+          />
+        </div>
+
         <label>Описание</label>
         <div className="mb-2 flex flex-wrap gap-1">
           <textarea
