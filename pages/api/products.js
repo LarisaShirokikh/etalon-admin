@@ -24,7 +24,6 @@ export default async function handle(req, res) {
       description,
       price,
       images,
-      parents,
       category,
       catalog, // добавьте это поле
       design,
@@ -44,7 +43,6 @@ export default async function handle(req, res) {
       description,
       price,
       images,
-      parents,
       category,
       catalog, // добавьте это поле
       design,
@@ -68,7 +66,6 @@ export default async function handle(req, res) {
       description,
       price,
       images,
-      parents,
       category,
       catalog, // добавьте это поле
       design,
@@ -91,7 +88,6 @@ export default async function handle(req, res) {
         description,
         price,
         images,
-        parents,
         category,
         catalog, // добавьте это поле
         design,

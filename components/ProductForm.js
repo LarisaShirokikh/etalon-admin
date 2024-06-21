@@ -37,7 +37,6 @@ export default function ProductForm({
   const [images, setImages] = useState(existingImages || []);
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [catalogs, setCatalogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -53,7 +52,7 @@ export default function ProductForm({
   const [interior, setInterior] = useState(existingInterior || "");
   const [loops, setLoops] = useState(existingLoops || "");
   const [protection, setProtection] = useState(existingProtection || "");
-  const [parents, setParentCategories] = useState([]);
+  const [catalogs, setCatalogs] = useState([]);
 
   const router = useRouter();
 
@@ -84,9 +83,8 @@ export default function ProductForm({
       description,
       price: priceData,
       images: finalImages,
-      parents,
       category: selectedCategories,
-      catalog, // добавьте это поле
+      catalog,
       design,
       contours,
       insulation,
@@ -167,7 +165,7 @@ export default function ProductForm({
       ev.target.selectedOptions,
       (option) => option.value
     );
-    setParentCategories(selectedOptions);
+    setSelectedCategories(selectedOptions);
   };
 
   return (
@@ -190,7 +188,11 @@ export default function ProductForm({
       </select>
 
       <label>Категории</label>
-      <select multiple onChange={handleCategoryChange} value={parents}>
+      <select
+        multiple
+        onChange={handleCategoryChange}
+        value={selectedCategories}
+      >
         {categories.map((category) => (
           <option key={category._id} value={category._id}>
             {category.name}

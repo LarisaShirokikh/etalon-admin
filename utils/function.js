@@ -9,6 +9,15 @@ export async function fetchCategories(setCategories) {
   }
 }
 
+export async function fetchProducts(setProducts) {
+  try {
+    const result = await axios.get("/api/products");
+    setProducts(result.data);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+}
+
 export async function fetchCatalogs(setCatalogs) {
   try {
     const result = await axios.get("/api/catalogs");

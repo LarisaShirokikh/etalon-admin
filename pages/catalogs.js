@@ -27,8 +27,13 @@ function Catalogs({ swal }) {
   const [properties, setProperties] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+
   const [brands, setBrands] = useState([]); // Состояние для брендов
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +68,7 @@ function Catalogs({ swal }) {
           .map((value) => value.trim()),
       })),
     };
-    console.log("data", data);
+
     if (editedCatalog) {
       data._id = editedCatalog._id;
       await axios.put("/api/catalogs", data);
@@ -164,6 +169,51 @@ function Catalogs({ swal }) {
     );
     setParentCategories(selectedOptions);
   };
+
+  const handleSearchInputChange = (ev) => {
+    setSearchQuery(ev.target.value);
+  };
+
+  // Function to filter catalogs based on search query
+  const filterBySearchQuery = (catalog) => {
+    const query = searchQuery.toLowerCase().trim();
+    return (
+      catalog.name.toLowerCase().includes(query) ||
+      (catalog.description && catalog.description.toLowerCase().includes(query))
+    );
+  };
+
+  const filteredCatalogs = catalogs.filter((catalog) => {
+    // Filter by selected categories
+    if (selectedCategories.length > 0) {
+      const catalogCategoryIds = catalog.parents.map(
+        (category) => category._id
+      );
+      if (
+        !selectedCategories.every((categoryId) =>
+          catalogCategoryIds.includes(categoryId)
+        )
+      ) {
+        return false;
+      }
+    }
+
+    // Filter by selected brand
+    if (selectedBrand && catalog.brand && catalog.brand._id !== selectedBrand) {
+      return false;
+    }
+
+    // Filter by price range
+    if (minPrice !== "" && parseFloat(catalog.price) < parseFloat(minPrice)) {
+      return false;
+    }
+    if (maxPrice !== "" && parseFloat(catalog.price) > parseFloat(maxPrice)) {
+      return false;
+    }
+
+    return true;
+  });
+
 
   return (
     <Layout>
@@ -366,19 +416,31 @@ function Catalogs({ swal }) {
           </button>
         </div>
       </form>
+
+
+      {/* Search input */}
+      <input
+        type="text"
+        placeholder="Поиск по названию или описанию"
+        value={searchQuery}
+        onChange={handleSearchInputChange}
+        className="bg-white w-full border border-gray-300 p-2 rounded-md mb-4"
+      />
       {!editedCatalog && (
-        <table className="basic mt-4">
+        <table className="basic mt-2">
           <thead>
             <tr>
               <td>Категория</td>
               <td>Бренд</td>
-              <td>Каталоги</td>
+              <td>Название</td>
+              <td>Цена</td>
               <td>Фото</td>
+              <td>Действия</td>
             </tr>
           </thead>
           <tbody>
             {catalogs.length > 0 &&
-              catalogs.map((catalog) => (
+              catalogs.filter(filterBySearchQuery).map((catalog) => (
                 <tr key={catalog._id}>
                   <td>{catalog.name}</td>
                   <td>{catalog.brand ? catalog.brand.name : "No brand"}</td>
@@ -387,7 +449,8 @@ function Catalogs({ swal }) {
                       ? catalog.parents.map((parent) => parent.name).join(", ")
                       : "Нет  категорий"}
                   </td>
-                  <td style={{ display: "flex" }}>
+                  <td>{catalog.price}</td>
+                  <td style={{ display: "flex"}}>
                     {catalog.images.map((image, index) => (
                       <img
                         key={index}
@@ -401,10 +464,11 @@ function Catalogs({ swal }) {
                       />
                     ))}
                   </td>
-                  <td>
+
+                  <td >
                     <button
                       onClick={() => editCatalog(catalog)}
-                      className="btn-default mr-1"
+                      className="btn-default mr-1 "
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -420,7 +484,7 @@ function Catalogs({ swal }) {
                           d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                         />
                       </svg>
-                      Редактировать
+                      
                     </button>
                     <button
                       onClick={() => deleteCatalog(catalog)}
@@ -440,7 +504,7 @@ function Catalogs({ swal }) {
                           d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                         />
                       </svg>
-                      Удалить
+                      
                     </button>
                   </td>
                 </tr>

@@ -28,7 +28,6 @@ const ProductSchema = new Schema(
     description: String,
     price: { type: PriceSchema, required: true },
     images: [{ type: String }],
-    // parents: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     catalog: [{ type: Schema.Types.ObjectId, ref: "Catalog" }],
     design: { type: String },
