@@ -78,3 +78,30 @@ export async function fetchBrands(setBrands) {
     console.error("Error fetching brands:", error);
   }
 }
+
+
+export const updateProductsCategories = async (productIds, categoryIds) => {
+  try {
+    // Создаем тело запроса
+    const body = {
+      productIds: productIds,
+      categoryIds: categoryIds,
+    };
+
+    // Отправляем запрос на сервер для обновления категорий
+    const response = await axios.post("/api/update", body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Ошибка при обновлении категорий продуктов");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при обновлении категорий продуктов:", error);
+    throw error;
+  }
+};

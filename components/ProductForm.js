@@ -4,6 +4,7 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { ReactSortable } from "react-sortablejs";
 import { fetchCategories, fetchCatalogs } from "@/utils/function";
+import Select from "react-select";
 
 export default function ProductForm({
   _id,
@@ -160,12 +161,12 @@ export default function ProductForm({
     );
   }
 
-  const handleCategoryChange = (ev) => {
-    const selectedOptions = Array.from(
-      ev.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedCategories(selectedOptions);
+  const handleCategoryChange = (selectedOptions) => {
+    setSelectedCategories(selectedOptions.map((option) => option.value));
+  };
+
+  const handleCatalogChange = (selectedOption) => {
+    setCatalog(selectedOption.value);
   };
 
   return (
@@ -178,27 +179,24 @@ export default function ProductForm({
         onChange={(ev) => setTitle(ev.target.value)}
       />
       <label>Каталог</label>
-      <select value={catalog} onChange={(ev) => setCatalog(ev.target.value)}>
-        <option value="">Без каталога</option>
-        {catalogs.map((c) => (
-          <option key={c._id} value={c._id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
+      <Select
+        value={catalogs.find((c) => c.value === catalog)}
+        onChange={handleCatalogChange}
+        options={catalogs.map((c) => ({
+          value: c._id,
+          label: c.name,
+        }))}
+      />
 
       <label>Категории</label>
-      <select
-        multiple
+      <Select
+        isMulti
+        options={categories.map((category) => ({
+          value: category._id,
+          label: category.name,
+        }))}
         onChange={handleCategoryChange}
-        value={selectedCategories}
-      >
-        {categories.map((category) => (
-          <option key={category._id} value={category._id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+      />
 
       <label>Фотографии</label>
       <div className="mb-2 flex flex-wrap gap-1">
@@ -266,7 +264,6 @@ export default function ProductForm({
           value={imageUrl}
         />
       </div>
-
       {imagePreviewUrl && (
         <div className="h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200">
           <img src={imagePreviewUrl} alt="Preview" className="rounded-lg" />
@@ -291,7 +288,6 @@ export default function ProductForm({
         value={discountedPrice}
         onChange={(ev) => setDiscountedPrice(ev.target.value)}
       />
-
       <label>Конструкция</label>
       <input
         type="text"
@@ -352,7 +348,6 @@ export default function ProductForm({
         value={protection}
         onChange={(ev) => setProtection(ev.target.value)}
       />
-
       <button type="submit" className="btn-primary">
         Сохранить
       </button>

@@ -5,7 +5,9 @@ import {
   fetchCategories,
   fetchCatalogs,
   fetchProducts,
+  updateProductsCategories,
 } from "@/utils/function";
+import Select from "react-select";
 
 
 export default function Products() {
@@ -13,6 +15,9 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState("");
   const [catalogs, setCatalogs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,12 +30,6 @@ export default function Products() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Products:", products);
-    console.log("Categories:", categories);
-    console.log("Catalogs:", catalogs);
-  }, [products, categories, catalogs]);
-
   // Function to filter catalogs based on search query
   const filterBySearchQuery = (product) => {
     const query = searchQuery.toLowerCase().trim();
@@ -40,8 +39,53 @@ export default function Products() {
     );
   };
 
+  const handleProductSelection = (productId) => {
+    setSelectedProducts((prevSelected) => {
+      if (prevSelected.includes(productId)) {
+        return prevSelected.filter((id) => id !== productId);
+      } else {
+        return [...prevSelected, productId];
+      }
+    });
+  };
+
+  const handleSelectAllProducts = () => {
+    if (selectAllChecked) {
+      setSelectedProducts([]);
+    } else {
+      const allProductIds = products.map((product) => product._id);
+      setSelectedProducts(allProductIds);
+    }
+    setSelectAllChecked(!selectAllChecked);
+  };
+
+   const handleBulkUpdate = async () => {
+     if (selectedCategories.length > 0) {
+       await updateProductsCategories(selectedProducts, selectedCategories);
+       const updatedProducts = products.map((product) => {
+         if (selectedProducts.includes(product._id)) {
+           return {
+             ...product,
+             category: [
+               ...new Set([...product.category, ...selectedCategories]),
+             ],
+           };
+         }
+         return product;
+       });
+       setProducts(updatedProducts);
+       setSelectedProducts([]);
+       setSelectedCategories([]);
+       setSelectAllChecked(false);
+     }
+   };
+
   const handleSearchInputChange = (ev) => {
     setSearchQuery(ev.target.value);
+  };
+
+  const handleCategoriesChange = (selectedOptions) => {
+    setSelectedCategories(selectedOptions.map((option) => option.value));
   };
 
   const getCategoryNames = (categoryIds) => {
@@ -68,9 +112,32 @@ export default function Products() {
         onChange={handleSearchInputChange}
         className="bg-white w-full border border-gray-300 p-2 rounded-md mb-4"
       />
+
+      <div className="mb-4">
+        <Select
+          isMulti
+          options={categories.map((category) => ({
+            value: category._id,
+            label: category.name,
+          }))}
+          onChange={handleCategoriesChange}
+          className="bg-white border border-gray-300 p-2 rounded-md"
+        />
+        <button onClick={handleBulkUpdate} className="btn-primary ml-2">
+          Обновить выбранные продукты
+        </button>
+      </div>
+
       <table className="basic mt-4">
         <thead>
           <tr>
+            <td>
+              <input
+                type="checkbox"
+                checked={selectAllChecked}
+                onChange={handleSelectAllProducts}
+              />
+            </td>
             <td>Название</td>
             <td>Каталог</td>
             <td>Категория</td>
@@ -83,6 +150,13 @@ export default function Products() {
           {products.length > 0 &&
             products.filter(filterBySearchQuery).map((product) => (
               <tr key={product._id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedProducts.includes(product._id)}
+                    onChange={() => handleProductSelection(product._id)}
+                  />
+                </td>
                 <td style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                   {product.title}
                 </td>
